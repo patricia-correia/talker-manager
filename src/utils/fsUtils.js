@@ -12,6 +12,18 @@ async function readTalkersData() {
  } 
 }
 
+async function whireTalkersData(id) {
+  try {
+    const data = await fs.readFile(path.resolve(__dirname, '../talker.json'));
+    const talks = JSON.parse(data);
+
+    return talks.find((elem) => elem.id === Number(id));
+  } catch (error) {
+    console.error(`Error na leitura do arquivo: ${error}`);
+  }
+}
+
 module.exports = {
   readTalkersData,
+  whireTalkersData,
 };
