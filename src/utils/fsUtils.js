@@ -3,16 +3,16 @@ const path = require('path');
 
 async function readTalkersData() {
   try {
-   const data = await fs.readFile(path.resolve(__dirname, '../talker.json'));
-   const talks = JSON.parse(data);
+    const data = await fs.readFile(path.resolve(__dirname, '../talker.json'));
+    const talks = JSON.parse(data);
 
-   return talks;
- } catch (error) {
-  console.error(`Error na leiura do arquivo: ${error}`);
- } 
+    return talks;
+  } catch (error) {
+    console.error(`Error na leiura do arquivo: ${error}`);
+  } 
 }
 
-async function whireTalkersData(id) {
+async function scriptTalkersData(id) {
   try {
     const data = await fs.readFile(path.resolve(__dirname, '../talker.json'));
     const talks = JSON.parse(data);
@@ -25,5 +25,5 @@ async function whireTalkersData(id) {
 
 module.exports = {
   readTalkersData,
-  whireTalkersData,
+  scriptTalkersData,
 };
