@@ -29,9 +29,13 @@ app.get('/talker/:id', async (req, response) => {
   response.status(HTTP_OK_STATUS).json(talkers);
 });
 
-app.post('/login', (_req, response) => {
-  const token = getToken();
-  response.status(HTTP_OK_STATUS).json({ token });
+app.post('/login', (req, response) => {
+  const singin = ['email', 'password'];
+  if (singin.every((elem) => elem in req.body)) {
+    const token = getToken();
+    response.status(HTTP_OK_STATUS).json({ token });
+  }
+    response.status(HTTP_ERRO_STATUS).json({ message: 'Senha ou email incorreto' });
 });
 
 app.listen(PORT, () => {
