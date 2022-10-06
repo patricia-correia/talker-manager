@@ -23,7 +23,26 @@ async function scriptTalkersData(id) {
   }
 }
 
+const validations = (email, password) => {
+  const regex = /\S+@\S+\.\S+/;
+  if (!email) {
+    return { message: 'O campo "email" é obrigatório' };
+  }
+  if (!regex.test(email)) {
+    return { message: 'O "email" deve ter o formato "email@email.com"' };
+  }
+  if (!password) {
+    return { message: 'O campo "password" é obrigatório' };
+  }
+  if (password.length < 6) {
+    return { message: 'O "password" deve ter pelo menos 6 caracteres' };
+  }
+
+  return true;
+};
+
 module.exports = {
   readTalkersData,
   scriptTalkersData,
+  validations,
 };
