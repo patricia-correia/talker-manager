@@ -5,7 +5,7 @@ const pathTalker = path.resolve(__dirname, '../talker.json');
 
 async function readTalkersData() {
   try {
-    const data = await fs.readFile();
+    const data = await fs.readFile(pathTalker);
     const talks = JSON.parse(data);
 
     return talks;
