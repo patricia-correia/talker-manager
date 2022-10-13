@@ -13,6 +13,7 @@ const {
   verifyRate,
   getTalkers,
   talkerEdit,
+  talkerDelete,
 } = require('./utils/fsUtils.js');
 const getToken = require('./utils/token.js');
 
@@ -84,6 +85,14 @@ app.post('/talker',
     const { id } = req.params;
     const formEdit = await talkerEdit(id, req.body);
     response.status(200).json(formEdit);
+  });
+
+  app.delete('/talker/:id', verifyToken, async (req, response) => {
+    const { id } = req.params;
+    const warning = await talkerDelete(id);
+    if (warning === true) {
+      response.status(204).send();
+    }
   });
 
 app.listen(PORT, () => {

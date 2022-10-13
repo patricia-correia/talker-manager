@@ -112,6 +112,13 @@ const talkerEdit = async (id, data) => {
   return talker[index];
 };
 
+const talkerDelete = async (id) => {
+  const talker = JSON.parse(await fs.readFile(pathTalker));
+  const newForm = talker.filter((talkers) => talkers.id !== Number(id));
+  await fs.writeFile(pathTalker, JSON.stringify(newForm));
+  return true;
+};
+
 module.exports = {
   readTalkersData,
   scriptTalkersData,
@@ -122,4 +129,5 @@ module.exports = {
   verifyRate,
   getTalkers,
   talkerEdit,
+  talkerDelete,
 };
