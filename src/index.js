@@ -12,6 +12,7 @@ const {
   verifyDate,
   verifyRate,
   getTalkers,
+  talkerEdit,
 } = require('./utils/fsUtils.js');
 const getToken = require('./utils/token.js');
 
@@ -72,6 +73,17 @@ app.post('/talker',
     talkers.push(talker);
     await fs.writeFile(pathTalker, JSON.stringify(talkers));
     response.status(201).json(talker);
+  });
+
+  app.put('/talker/:id',
+  verifyToken,
+  verifyName,
+  verifyDate,
+  verifyRate,
+  async (req, response) => {
+    const { id } = req.params;
+    const formEdit = await talkerEdit(id, req.body);
+    response.status(200).json(formEdit);
   });
 
 app.listen(PORT, () => {

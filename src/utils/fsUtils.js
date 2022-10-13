@@ -1,9 +1,11 @@
 const fs = require('fs').promises;
 const path = require('path');
 
+const pathTalker = path.resolve(__dirname, '../talker.json');
+
 async function readTalkersData() {
   try {
-    const data = await fs.readFile(path.resolve(__dirname, '../talker.json'));
+    const data = await fs.readFile();
     const talks = JSON.parse(data);
 
     return talks;
@@ -14,7 +16,7 @@ async function readTalkersData() {
 
 async function scriptTalkersData(id) {
   try {
-    const data = await fs.readFile(path.resolve(__dirname, '../talker.json'));
+    const data = await fs.readFile(pathTalker);
     const talks = JSON.parse(data);
 
     return talks.find((elem) => elem.id === Number(id));
@@ -88,19 +90,26 @@ const verifyDate = (req, response, next) => {
 
 const verifyRate = (req, response, next) => {
   const { rate } = req.body.talk;
-  if (!rate) {
+  if (!rate && rate !== 0) {
     return response.status(400).json({ message: 'O campo "rate" é obrigatório' });
   }
-  if (rate < 1 || rate > 5) {
+  if (rate > 5 || rate < 1) {
     return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
 };
 
 const getTalkers = async () => {
-  const pathTalker = path.resolve(__dirname, '../talker.json');
-  const talkers = JSON.parse(await fs.readFile(pathTalker, 'utf-8'));
+  const data = path.resolve(pathTalker);
+  const talkers = JSON.parse(await fs.readFile(data, 'utf-8'));
   return talkers;
+};
+const talkerEdit = async (id, data) => {
+  const talker = JSON.parse(await fs.readFile(pathTalker));
+  const index = talker.findIndex((talkers) => talkers.id === Number(id));
+  talker[index] = { id: Number(id), ...data };
+  await fs.writeFile(pathTalker, JSON.stringify(talker));
+  return talker[index];
 };
 
 module.exports = {
@@ -112,4 +121,5 @@ module.exports = {
   verifyDate,
   verifyRate,
   getTalkers,
+  talkerEdit,
 };
