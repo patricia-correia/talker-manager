@@ -1,11 +1,24 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readTalkersData, scriptTalkersData, validations } = require('./utils/fsUtils.js');
+const fs = require('fs').promises;
+const path = require('path');
+
+const {
+  readTalkersData,
+  scriptTalkersData,
+  validations,
+  verifyToken,
+  verifyName,
+  verifyDate,
+  verifyRate,
+  getTalkers,
+} = require('./utils/fsUtils.js');
 const getToken = require('./utils/token.js');
 
 const app = express();
 app.use(bodyParser.json());
 
+const pathTalker = path.resolve(__dirname, 'talker.json');
 const HTTP_RIGHT_STATUS = 400;
 const HTTP_ERRO_STATUS = 404;
 const HTTP_OK_STATUS = 200;
@@ -47,6 +60,19 @@ app.post('/login', validation, (req, response) => {
   }
   response.status(HTTP_ERRO_STATUS).json({ message: 'Senha ou email incorreto' });
 });
+
+app.post('/talker',
+  verifyToken,
+  verifyName,
+  verifyDate,
+  verifyRate,
+  async (req, response) => {
+    const talkers = await getTalkers();
+    const talker = { ...req.body, id: talkers.length + 1 };
+    talkers.push(talker);
+    await fs.writeFile(pathTalker, JSON.stringify(talkers));
+    response.status(201).json(talker);
+  });
 
 app.listen(PORT, () => {
   console.log('Online');
